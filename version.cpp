@@ -5,7 +5,6 @@ HMODULE hRealDll = nullptr;
 void LoadRealVersion() {
     if (!hRealDll) {
         hRealDll = LoadLibraryW(L"versionHooked.dll");
-        
         if (!hRealDll) {
             wchar_t systemPath[MAX_PATH];
             GetSystemDirectoryW(systemPath, MAX_PATH);
@@ -15,7 +14,7 @@ void LoadRealVersion() {
     }
 }
 
-extern "C" __declspec(dllexport) BOOL WINAPI GetFileVersionInfoA(LPCSTR a, DWORD b, DWORD c, LPVOID d) {
+extern "C" BOOL WINAPI Proxy_GetFileVersionInfoA(LPCSTR a, DWORD b, DWORD c, LPVOID d) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef BOOL (WINAPI *pFn)(LPCSTR, DWORD, DWORD, LPVOID);
@@ -23,7 +22,7 @@ extern "C" __declspec(dllexport) BOOL WINAPI GetFileVersionInfoA(LPCSTR a, DWORD
     return fn ? fn(a, b, c, d) : FALSE;
 }
 
-extern "C" __declspec(dllexport) BOOL WINAPI GetFileVersionInfoW(LPCWSTR a, DWORD b, DWORD c, LPVOID d) {
+extern "C" BOOL WINAPI Proxy_GetFileVersionInfoW(LPCWSTR a, DWORD b, DWORD c, LPVOID d) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef BOOL (WINAPI *pFn)(LPCWSTR, DWORD, DWORD, LPVOID);
@@ -31,7 +30,7 @@ extern "C" __declspec(dllexport) BOOL WINAPI GetFileVersionInfoW(LPCWSTR a, DWOR
     return fn ? fn(a, b, c, d) : FALSE;
 }
 
-extern "C" __declspec(dllexport) DWORD WINAPI GetFileVersionInfoSizeA(LPCSTR a, LPDWORD b) {
+extern "C" DWORD WINAPI Proxy_GetFileVersionInfoSizeA(LPCSTR a, LPDWORD b) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef DWORD (WINAPI *pFn)(LPCSTR, LPDWORD);
@@ -39,7 +38,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI GetFileVersionInfoSizeA(LPCSTR a, 
     return fn ? fn(a, b) : 0;
 }
 
-extern "C" __declspec(dllexport) DWORD WINAPI GetFileVersionInfoSizeW(LPCWSTR a, LPDWORD b) {
+extern "C" DWORD WINAPI Proxy_GetFileVersionInfoSizeW(LPCWSTR a, LPDWORD b) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef DWORD (WINAPI *pFn)(LPCWSTR, LPDWORD);
@@ -47,7 +46,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI GetFileVersionInfoSizeW(LPCWSTR a,
     return fn ? fn(a, b) : 0;
 }
 
-extern "C" __declspec(dllexport) BOOL WINAPI VerQueryValueA(LPCVOID a, LPCSTR b, LPVOID* c, PUINT d) {
+extern "C" BOOL WINAPI Proxy_VerQueryValueA(LPCVOID a, LPCSTR b, LPVOID* c, PUINT d) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef BOOL (WINAPI *pFn)(LPCVOID, LPCSTR, LPVOID*, PUINT);
@@ -55,13 +54,20 @@ extern "C" __declspec(dllexport) BOOL WINAPI VerQueryValueA(LPCVOID a, LPCSTR b,
     return fn ? fn(a, b, c, d) : FALSE;
 }
 
-extern "C" __declspec(dllexport) BOOL WINAPI VerQueryValueW(LPCVOID a, LPCWSTR b, LPVOID* c, PUINT d) {
+extern "C" BOOL WINAPI Proxy_VerQueryValueW(LPCVOID a, LPCWSTR b, LPVOID* c, PUINT d) {
     if (!OpenMutexW(SYNCHRONIZE, FALSE, L"GTASA_Launcher_Mutex")) { ExitProcess(0); }
     LoadRealVersion();
     typedef BOOL (WINAPI *pFn)(LPCVOID, LPCWSTR, LPVOID*, PUINT);
     pFn fn = (pFn)GetProcAddress(hRealDll, "VerQueryValueW");
     return fn ? fn(a, b, c, d) : FALSE;
 }
+
+#pragma comment(linker, "/export:GetFileVersionInfoA=Proxy_GetFileVersionInfoA")
+#pragma comment(linker, "/export:GetFileVersionInfoW=Proxy_GetFileVersionInfoW")
+#pragma comment(linker, "/export:GetFileVersionInfoSizeA=Proxy_GetFileVersionInfoSizeA")
+#pragma comment(linker, "/export:GetFileVersionInfoSizeW=Proxy_GetFileVersionInfoSizeW")
+#pragma comment(linker, "/export:VerQueryValueA=Proxy_VerQueryValueA")
+#pragma comment(linker, "/export:VerQueryValueW=Proxy_VerQueryValueW")
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     return TRUE;
