@@ -1,0 +1,4 @@
+supabase
+opencv-python
+pillow
+pyinstaller
