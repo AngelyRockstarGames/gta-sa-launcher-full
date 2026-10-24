@@ -1,0 +1,39 @@
+name: Build Launcher and DLL
+
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar dependencias de Python
+      run: pip install -r requirements.txt
+
+    - name: Compilar Launcher (PyInstaller)
+      run: |
+        pyinstaller --noconsole --onefile --name rockstar_games_services_launcher_gta_sa --add-data "media;media" --icon=data/Icons/icon.ico launcher.py
+
+    - name: Configurar CMake (Win32)
+      run: cmake -B ${{github.workspace}}/build -A Win32
+
+    - name: Compilar DLL (version.dll)
+      run: cmake --build ${{github.workspace}}/build --config Release
+
+    - name: Subir Artefactos finales
+      uses: actions/upload-artifact@v4
+      with:
+        name: gta-sa-launcher-completo
+        path: |
+          dist/rockstar_games_services_launcher_gta_sa.exe
+          build/Release/version.dll
