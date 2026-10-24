@@ -7,7 +7,7 @@ void CheckLauncher() {
     if (hMutex == NULL) {
         MessageBoxW(
             NULL, 
-            L"Error Crítico de Rockstar Services:\n\nNo se ha podido verificar la autenticación del juego. Por favor, inicie el juego utilizando launcher.exe", 
+            L"launcher.exe error\n\nNo se ha podido Verificar la autenticacion, Incia el juego usando launcher.exe", 
             L"Rockstar Games Launcher", 
             MB_ICONERROR | MB_OK
         );
