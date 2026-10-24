@@ -62,13 +62,6 @@ extern "C" BOOL WINAPI Proxy_VerQueryValueW(LPCVOID a, LPCWSTR b, LPVOID* c, PUI
     return fn ? fn(a, b, c, d) : FALSE;
 }
 
-#pragma comment(linker, "/export:GetFileVersionInfoA=Proxy_GetFileVersionInfoA")
-#pragma comment(linker, "/export:GetFileVersionInfoW=Proxy_GetFileVersionInfoW")
-#pragma comment(linker, "/export:GetFileVersionInfoSizeA=Proxy_GetFileVersionInfoSizeA")
-#pragma comment(linker, "/export:GetFileVersionInfoSizeW=Proxy_GetFileVersionInfoSizeW")
-#pragma comment(linker, "/export:VerQueryValueA=Proxy_VerQueryValueA")
-#pragma comment(linker, "/export:VerQueryValueW=Proxy_VerQueryValueW")
-
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     return TRUE;
 }
