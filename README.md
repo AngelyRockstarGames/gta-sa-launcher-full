@@ -42,7 +42,7 @@ Este launcher es el resultado de mezclar lo mejor de varios mundos:
 
 ## 🧑‍💻 Créditos y Agradecimientos
 
-*   **Angely**: Creadora del proyecto original. *"Hola soy Angely, la que hizo este gta re trucho. Como podrás ver, este launcher lo hice con DeepSeek porque es un buen amigo. Este launcher, como perdió la función de guardado en la nube de Rockstar, lo hice con DeepSeek y recuperó esa función."*
+*   **Angely**: Creadora del proyecto original. *"Hola soy Angely, la que hizo este gta re trucho. Como podrás ver, este launcher lo hice porque me banco bro este launcher, como perdió la función de guardado en la nube de Rockstar, lo hice con supabase y recuperó esa función."*
 *   **DeepSeek AI**: Por la asistencia en la programación, resolución de bugs y los problemas en Mutex y Creacion del Readme.MD
 *   **Comunidad de Modding de GTA SA**: Por mantener vivo este juego después de tantos años.
 
